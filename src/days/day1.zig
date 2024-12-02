@@ -4,7 +4,9 @@ const util = @import("../util/util.zig");
 pub const DayOne = struct {
     pub fn run() !void {
         const part_one_res = try part_one();
-        std.debug.print("part one -> {d}", .{part_one_res});
+        const part_two_res = try part_two();
+        std.debug.print("part one -> {d}\n", .{part_one_res});
+        std.debug.print("part two -> {d}\n", .{part_two_res});
     }
 };
 
@@ -30,6 +32,40 @@ fn part_one() !i32 {
 
         sum = sum + n;
         idx += 1;
+    }
+
+    return sum;
+}
+
+fn part_two() !i32 {
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
+
+    const allocator = arena.allocator();
+    const input = try util.read_input_file("assets/day1_input.txt", allocator);
+    defer allocator.free(input);
+
+    const inputs = try prepare_input(input, allocator);
+
+    var hash_table = std.hash_map.AutoHashMap(i32, i32).init(allocator);
+    defer hash_table.deinit();
+
+    var idx: usize = 0;
+    for (inputs.right) |l| {
+        if (std.mem.containsAtLeast(i32, inputs.left, 1, &[1]i32{l})) {
+            var count = hash_table.get(l);
+            if (!hash_table.contains(l)) {
+                count = 0;
+            }
+            try hash_table.put(l, count.? + 1);
+        }
+        idx += 1;
+    }
+
+    var sum: i32 = 0;
+    var iterator = hash_table.iterator();
+    while (iterator.next()) |entry| {
+        sum = sum + entry.key_ptr.* * entry.value_ptr.*;
     }
 
     return sum;
