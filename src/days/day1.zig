@@ -1,16 +1,7 @@
 const std = @import("std");
 const util = @import("../util/util.zig");
 
-pub const DayOne = struct {
-    pub fn run() !void {
-        const part_one_res = try part_one();
-        const part_two_res = try part_two();
-        std.debug.print("part one -> {d}\n", .{part_one_res});
-        std.debug.print("part two -> {d}\n", .{part_two_res});
-    }
-};
-
-fn part_one() !i32 {
+pub fn part_one() !i32 {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
 
@@ -37,7 +28,7 @@ fn part_one() !i32 {
     return sum;
 }
 
-fn part_two() !i32 {
+pub fn part_two() !i32 {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
 
