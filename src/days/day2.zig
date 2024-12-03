@@ -55,8 +55,6 @@ pub fn part_two() !i32 {
     var count: i32 = 0;
 
     for (inputs) |levels| {
-        var predicate = true;
-
         for (0.., levels) |i, _| {
             var levels_arraylist = std.ArrayList(i32).init(allocator);
             try levels_arraylist.appendSlice(levels);
@@ -67,9 +65,7 @@ pub fn part_two() !i32 {
             const a = try check_row_entries(sub_list, false);
             const b = try check_row_entries(sub_list, true);
 
-            predicate = (a or b) and levels.len > 0;
-
-            if (predicate) {
+            if ((a or b) and levels.len > 0) {
                 count += 1;
                 break;
             }
